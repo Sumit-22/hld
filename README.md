@@ -362,3 +362,64 @@ While CDNs are beneficial, they may not be ideal in certain situations:
 ## Conclusion
 CDNs play a crucial role in reducing latency, improving performance, and increasing availability. They are essential for handling global traffic efficiently and securing web applications.
 
+
+# Throughput in System Design
+
+## 1. What is Throughput?
+Throughput is the rate at which a system processes requests or data over a given time period. It is usually measured in:
+
+- **Requests per second (RPS)** – Web servers and APIs.
+- **Transactions per second (TPS)** – Databases and financial systems.
+- **Megabits per second (Mbps)** or **Gigabits per second (Gbps)** – Network speed.
+
+### Throughput vs Latency
+- **Latency** is the delay in processing a single request.
+- **Throughput** is the total amount of work the system handles over time.
+
+#### Example:
+- A system with low latency (quick response) but low throughput can only handle a few users at a time.
+- A system with high throughput can process many requests per second, even if each request takes time.
+
+## 2. Factors Affecting Throughput
+Several components impact throughput in a system:
+
+### 1. CPU Processing Speed
+- A slow CPU limits the number of requests it can handle per second.
+- Multi-core CPUs and parallel processing increase throughput.
+
+### 2. Network Bandwidth
+- Limited bandwidth causes bottlenecks in data transmission.
+- CDNs and compression help optimize throughput.
+
+### 3. Disk I/O Speed
+- HDDs have lower throughput due to mechanical parts.
+- SSDs (Solid State Drives) improve throughput by providing faster read/write speeds.
+
+### 4. Database Performance
+- Indexes, query optimization, and caching improve database throughput.
+- High-throughput databases include Apache Cassandra, Redis, and Amazon DynamoDB.
+
+### 5. Concurrency & Parallelism
+- More threads/processes increase throughput by handling multiple requests simultaneously.
+- Load balancing distributes traffic, preventing one server from becoming a bottleneck.
+
+### 6. Caching Mechanisms
+- Redis, Memcached, and CDNs reduce database and API calls, improving throughput.
+
+## 3. Measuring Throughput
+Throughput is measured using different tools and metrics:
+
+### 1. Requests Per Second (RPS) & Transactions Per Second (TPS)
+- Used for APIs, databases, and web applications.
+- **Tools**: Apache JMeter, Locust, wrk.
+
+### 2. Network Throughput (Mbps, Gbps)
+- Used for network speed tests.
+- **Tools**: iPerf, Wireshark.
+
+### 3. Disk I/O Throughput
+- Measured in MB/s (Megabytes per second).
+- **Tools**: iostat, fio.
+
+## 4. How to Improve Throughput
+To scale a system for higher throughput, consider:
