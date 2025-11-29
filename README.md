@@ -1258,3 +1258,98 @@ Redundancy refers to having extra (backup) components, resources, or data to pre
 In most modern system designs, both replication and redundancy are used together for optimal performance and fault tolerance.
 
 ---
+# Active Replication vs. Passive Replication
+---
+
+Replication can be broadly categorized into **Active Replication** and **Passive Replication**, depending on how requests are processed and how failure recovery is managed.
+
+## 1. What is Active Replication?
+In **Active Replication**, all replicas process the same request simultaneously and return responses independently.
+
+### How It Works:
+- A request is broadcast to all replicas using a coordination protocol (e.g., Atomic Broadcast).
+- Each replica executes the request independently.
+- Responses are consolidated, and the system ensures consistency.
+
+### Characteristics:
+- ✔ **High availability and fault tolerance** → No single point of failure.
+- ✔ **Fast failover** → If a replica fails, others continue to operate normally.
+- ✔ **Strong consistency needed** → All replicas must be synchronized.
+
+### Example Use Cases:
+- Financial transactions (e.g., stock trading, banking).
+- Distributed databases (e.g., Google Spanner, Raft consensus).
+- Cloud services with high availability (e.g., Kubernetes with multi-master nodes).
+
+### Pros & Cons of Active Replication:
+
+| Pros | Cons |
+|------|------|
+| High availability | More processing overhead |
+| No single point of failure | More complex synchronization |
+| Faster failover time | Requires strong consistency mechanisms |
+
+## 2. What is Passive Replication?
+In **Passive Replication**, only one replica (the primary) processes the request, while other replicas stay idle (passive) and update their state based on the primary’s execution.
+
+### How It Works:
+- The Primary Replica processes all requests.
+- After processing, it sends the updated state to all backup replicas.
+- If the primary fails, a backup is promoted to become the new primary.
+
+### Characteristics:
+- ✔ **Easier to implement** → Only one replica handles requests at a time.
+- ✔ **Less processing overhead** → Only the primary executes transactions.
+- ✔ **Failover takes time** → A backup must take over when the primary fails.
+
+### Example Use Cases:
+- Databases with primary-backup architecture (e.g., PostgreSQL, MySQL Replication).
+- Leader-based distributed systems (e.g., Zookeeper, etcd, Raft).
+- Cloud storage systems (e.g., AWS RDS primary-read replicas).
+
+### Pros & Cons of Passive Replication:
+
+| Pros | Cons |
+|------|------|
+| Lower processing overhead | Failover introduces downtime |
+| Easier to implement | Single point of failure in primary |
+| Works well for read-heavy workloads | Slower recovery in case of failure |
+
+## 3. Key Differences Between Active and Passive Replication
+
+| Feature | Active Replication | Passive Replication |
+|---------|--------------------|---------------------|
+| **Execution** | All replicas process the request independently | Only the primary executes; backups receive updates |
+| **Consistency Model** | Requires strong consistency | Eventual consistency is common |
+| **Failover Speed** | Fast failover (since all replicas are active) | Slower failover (backup must take over) |
+| **Fault Tolerance** | High (no single point of failure) | Medium (primary is a single point of failure) |
+| **Processing Overhead** | High (all replicas execute requests) | Low (only primary executes) |
+| **Example Use Cases** | Financial transactions, Kubernetes multi-master | Databases (MySQL, PostgreSQL), AWS RDS |
+
+## 4. When to Use Active vs. Passive Replication?
+
+| Scenario | Use Active Replication | Use Passive Replication |
+|----------|------------------------|-------------------------|
+| Low-latency, high-availability systems | ✅ | ❌ |
+| Leader-based coordination needed | ❌ | ✅ |
+| Write-heavy workloads | ✅ | ❌ |
+| Read-heavy workloads | ❌ | ✅ |
+| Fast failover required | ✅ | ❌ |
+| Lower cost and simpler implementation | ❌ | ✅ |
+
+## 5. Real-World Examples
+
+| System | Active Replication | Passive Replication |
+|--------|--------------------|---------------------|
+| **Google Spanner** | ✅ | ❌ |
+| **Kubernetes Multi-Master** | ✅ | ❌ |
+| **PostgreSQL Streaming Replication** | ❌ | ✅ |
+| **AWS RDS (Read Replicas)** | ❌ | ✅ |
+| **Raft Consensus Algorithm** | ❌ | ✅ |
+| **Stock Trading Platforms** | ✅ | ❌ |
+
+## 6. Conclusion
+- **Active Replication** is used when high availability and fast failover are required, but it has higher processing overhead.
+- **Passive Replication** is used for leader-based systems where failover is rare but needed, and it has lower overhead but higher failover time.
+
+---
