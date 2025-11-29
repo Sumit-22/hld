@@ -20,3 +20,39 @@ Explains different modules in the system and their purpose.
   - User Module (Handles login, signup)
   - Product Module (Stores product details)
   - Order Module (Manages orders and payments)
+
+### 3️⃣ Technology Stack
+Specifies the programming languages, frameworks, and databases used.
+- **Example**:
+  - Backend: Spring Boot
+  - Frontend: React
+  - Database: PostgreSQL
+  - Authentication: JWT & OAuth2
+
+### 4️⃣ Data Flow
+Describes how data moves between different components.
+- **Example**:
+  - A user requests product details.
+  - The request goes to the backend (Spring Boot).
+  - The backend fetches data from the database.
+  - The response is sent back to the frontend.
+
+### 5️⃣ API Design
+Lists the main APIs that different components will use.
+- **Example**:
+  - `POST /login` → To authenticate users.
+  - `GET /products` → To fetch product list.
+
+### 6️⃣ Security Considerations
+How the system ensures data protection and secure access.
+- **Example**:
+  - Encryption for storing sensitive data.
+  - Role-based access for different users.
+
+### 7️⃣ Scalability & Performance
+How the system will handle high traffic and future growth.
+- **Example**:
+  - Load Balancers to distribute traffic.
+  - Caching (Redis) to speed up data retrieval.
+
+---
