@@ -1009,3 +1009,156 @@ There are two main ways to scale a system:
 Scaling is essential for handling growing traffic efficiently. Choosing between vertical vs. horizontal scaling depends on cost, complexity, and fault tolerance needs.
 
 ---
+
+# **Redundancy in System Design**
+
+---
+
+### **1. What is Redundancy?**
+Redundancy in system design refers to having backup resources (hardware, software, data, or network components) to improve fault tolerance, availability, and reliability. It ensures that the system continues to function even if some components fail.
+
+#### **Why is Redundancy Important?**
+- Prevents single points of failure (SPOF).
+- Improves system reliability and availability.
+- Ensures data durability in case of failures.
+- Minimizes downtime for critical systems (e.g., banking, cloud services).
+
+---
+
+### **2. Types of Redundancy**
+
+#### **1. Hardware Redundancy**
+Using multiple physical components (servers, disks, network devices) to ensure continuous operation.
+
+##### **Examples:**
+- Multiple power supplies in a data center to prevent power failure.
+- RAID (Redundant Array of Independent Disks) for data storage redundancy.
+- Dual network connections (active-passive failover).
+
+| **Pros**                  | **Cons**                        |
+|---------------------------|---------------------------------|
+| Prevents hardware failure impact | Expensive                      |
+| Ensures high availability | More maintenance required        |
+
+#### **2. Data Redundancy**
+Having multiple copies of the same data to prevent data loss.
+
+##### **Examples:**
+- Database Replication → Keep multiple copies of a database across different servers.
+- Backup Systems → Regular snapshots stored in remote locations (AWS S3, Google Cloud Storage).
+
+| **Pros**                  | **Cons**                        |
+|---------------------------|---------------------------------|
+| Prevents data loss        | Increased storage cost          |
+| Enables quick recovery    | Can cause synchronization issues|
+
+#### **3. Network Redundancy**
+Using multiple network paths to ensure connectivity even if one path fails.
+
+##### **Examples:**
+- BGP (Border Gateway Protocol) enables traffic rerouting if a path is down.
+- Multiple ISPs to prevent internet outage.
+- Load balancers with multiple backend servers.
+
+| **Pros**                  | **Cons**                        |
+|---------------------------|---------------------------------|
+| Prevents network outages  | Higher bandwidth costs          |
+| Ensures connectivity      | Requires network management     |
+
+#### **4. Software Redundancy**
+Running multiple instances of the same software to handle failures gracefully.
+
+##### **Examples:**
+- Microservices replication → Running multiple instances of a service.
+- Hot Standby Servers → A backup server takes over immediately if the primary server fails.
+- Kubernetes Auto-Healing → If a container crashes, it is restarted automatically.
+
+| **Pros**                  | **Cons**                        |
+|---------------------------|---------------------------------|
+| Prevents software crashes | Requires extra compute power    |
+| Improves system uptime    | Synchronization challenges      |
+
+#### **5. Geographic Redundancy (Disaster Recovery Redundancy)**
+Storing data and services in multiple geographic locations to survive regional failures (e.g., earthquakes, power outages).
+
+##### **Examples:**
+- Cloud Providers (AWS, Azure, GCP) replicate data across multiple regions.
+- CDNs (Content Delivery Networks) serve data from the closest location to users.
+- Multi-region databases (Google Spanner, AWS DynamoDB Global Tables).
+
+| **Pros**                  | **Cons**                        |
+|---------------------------|---------------------------------|
+| Survives regional disasters | Expensive to maintain           |
+| Improves latency          | Complex synchronization         |
+
+---
+
+### **3. Key Redundancy Techniques**
+
+#### **1. RAID (Redundant Array of Independent Disks)**
+A technique to store data redundantly across multiple disks to improve reliability.
+
+| **RAID Level** | **Description**                     | **Pros**                    | **Cons**              |
+|----------------|-------------------------------------|-----------------------------|-----------------------|
+| RAID 1 (Mirroring) | Copies data on two disks | High fault tolerance          | Doubles storage cost  |
+| RAID 5 (Striping with Parity) | Distributes data & parity across disks | Efficient storage | Requires at least 3 disks |
+| RAID 10 (RAID 1 + RAID 0) | Mirrors & stripes data for speed & redundancy | High performance & redundancy | Expensive             |
+
+#### **2. Database Replication**
+Keeping multiple copies of a database to ensure availability.
+
+| **Type**                 | **Description**                         | **Example**               |
+|--------------------------|-----------------------------------------|---------------------------|
+| Master-Slave Replication | Writes to the master, reads from replicas | MySQL, PostgreSQL         |
+| Master-Master Replication | Both nodes handle writes & reads        | MongoDB, CouchDB          |
+| Multi-Region Replication  | Distributes copies globally             | Google Spanner, AWS DynamoDB |
+
+#### **3. Load Balancing for Redundancy**
+Distributes traffic across multiple servers to prevent overload and failures.
+
+| **Load Balancer Type**     | **Description**                | **Example**             |
+|----------------------------|--------------------------------|-------------------------|
+| DNS Load Balancing         | Routes users to the nearest data center | Cloudflare, AWS Route 53 |
+| Application Load Balancing | Balances traffic at the HTTP level | AWS ALB, Nginx          |
+| Network Load Balancing     | Distributes TCP/UDP traffic   | AWS NLB                 |
+
+#### **4. Backup & Disaster Recovery**
+Periodic backups ensure that data can be restored after failure.
+
+| **Backup Type** | **Description**                | **Example**             |
+|-----------------|--------------------------------|-------------------------|
+| Full Backup     | Copies all data                | Daily backups in AWS S3 |
+| Incremental Backup | Only backs up changed data   | Rsync, Google Drive Sync |
+| Snapshot Backup | Creates point-in-time snapshots | AWS EBS Snapshots       |
+
+---
+
+### **4. Real-World Use Cases of Redundancy**
+
+| **System**          | **Redundancy Method**                                  |
+|---------------------|--------------------------------------------------------|
+| Google Search       | Geo-redundant data centers, load balancing             |
+| Netflix             | Multi-region microservices, CDN caching                |
+| AWS                 | Availability zones, database replication               |
+| WhatsApp            | Message queues, database replication                   |
+| Banking Systems     | RAID storage, high-availability clusters               |
+
+---
+
+### **5. Challenges in Implementing Redundancy**
+
+| **Challenge**           | **Solution**                                      |
+|-------------------------|---------------------------------------------------|
+| High Cost               | Optimize resource allocation, use cloud auto-scaling |
+| Synchronization Issues  | Implement consistency models (e.g., CAP theorem)  |
+| Complexity in Management| Use orchestration tools (Kubernetes, Terraform)   |
+| Data Corruption         | Implement checksums and versioning               |
+
+---
+
+### **6. Conclusion**
+Redundancy is critical for designing highly available and fault-tolerant systems. A well-planned redundancy strategy balances cost, complexity, and reliability.
+
+---
+# Replication vs. Redundancy – Key Differences and Comparison
+---
