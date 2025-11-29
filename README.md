@@ -85,3 +85,19 @@ User → Load Balancer → API Gateway → URL Shortener Service → Database (M
 - `GET /{shortCode}` → Redirects to original URL.
 
 ---
+
+## Difference Between HLD & LLD
+
+| Feature               | High-Level Design (HLD)       | Low-Level Design (LLD)        |
+|-----------------------|-------------------------------|--------------------------------|
+| **Focus**             | Big picture of the system      | Detailed implementation        |
+| **Diagrams Used**     | Architecture diagrams         | Class diagrams, sequence diagrams |
+| **Target Audience**   | Architects, Managers          | Developers, Engineers          |
+| **Example**           | “We’ll use a cache for faster access” | “We’ll use Redis with an expiry of 1 hour” |
+
+---
+
+## Conclusion
+- **HLD** is like a roadmap for software development.
+- It ensures that the system is structured, scalable, and secure.
+- Once HLD is finalized, developers proceed with Low-Level Design (LLD) and coding.
