@@ -797,3 +797,82 @@ When a partition occurs, the system must decide how to handle unavailable nodes.
 
 Partition tolerance is essential for any distributed system because network failures are inevitable. The system design must choose between Availability (AP) or Consistency (CP) based on the business needs.
 
+
+# CAP Theorem in System Design
+
+## 1. What is the CAP Theorem?
+
+The CAP theorem (also called Brewer’s Theorem) states that in a distributed system, you can only achieve two out of the following three properties:
+
+- **Consistency (C)** – Every read returns the most recent write.
+- **Availability (A)** – Every request gets a response, even if some nodes fail.
+- **Partition Tolerance (P)** – The system continues to function despite network failures.
+
+Since network partitions always exist in distributed systems, we must choose between Consistency (C) and Availability (A) when a partition occurs.
+
+## 2. Understanding CAP with Real-Life Examples
+
+Let's consider a banking system:
+
+If a network partition occurs and a customer withdraws ₹1000 from an ATM in one city and checks their balance in another city:
+
+- **Strong Consistency (C)** → The system blocks the second request until all nodes sync.
+- **High Availability (A)** → The system returns stale data but remains online.
+- **Partition Tolerance (P)** → The system handles failures gracefully and continues working.
+
+## 3. CAP Theorem in Action: Types of Systems
+
+1. **CP Systems (Consistency + Partition Tolerance)**  
+   Guarantees correct data but may reject requests during network failures.  
+   Example: MongoDB (with strong consistency mode), HBase, Zookeeper  
+   Use Case: Banking, financial transactions, stock trading  
+   *Example Scenario*:  
+   You transfer ₹5000 from one bank account to another.  
+   **CP System**: If the network fails, the transfer is delayed but data remains correct.
+
+2. **AP Systems (Availability + Partition Tolerance)**  
+   Guarantees uptime but may return stale or inconsistent data.  
+   Example: Amazon DynamoDB, Cassandra, CouchDB, Akamai CDN  
+   Use Case: Social media, caching, content delivery networks (CDNs)  
+   *Example Scenario*:  
+   You post a tweet, but due to network partition, some users see the tweet immediately while others see it a few seconds later.
+
+3. **CA Systems (Consistency + Availability) (Impractical in Distributed Systems)**  
+   Works only in ideal conditions with no network failures (i.e., no partition tolerance).  
+   Example: Single-node relational databases (MySQL, PostgreSQL in a single instance).  
+   Use Case: Local databases (not distributed).  
+   *Example Scenario*:  
+   A single-node MySQL database can maintain both consistency and availability because there's no network partition.
+
+## 4. How CAP Theorem Affects Distributed Databases
+
+| Database            | CAP Type | Explanation                                           |
+|---------------------|----------|-------------------------------------------------------|
+| MongoDB             | CP       | Prioritizes consistency but may reject requests during failures. |
+| Apache Cassandra    | AP       | Ensures availability but allows stale reads.         |
+| Google Spanner      | CP       | Strong consistency across regions, but might delay responses. |
+| Amazon DynamoDB     | AP       | High availability with eventual consistency.         |
+| Zookeeper           | CP       | Used in leader election and coordination, prioritizing correctness. |
+
+## 5. Trade-offs in CAP Theorem
+
+| Approach                               | Pros                                    | Cons                                |
+|----------------------------------------|-----------------------------------------|-------------------------------------|
+| **CP (Strong Consistency, Tolerates Failures)** | Guarantees accurate data               | May reject requests or be slow     |
+| **AP (High Availability, Tolerates Failures)** | Always online, handles failures well   | Might return outdated data        |
+| **CA (Consistency + Availability, No Partition Tolerance)** | Strong consistency & availability      | Breaks in a distributed system    |
+
+## 6. Choosing the Right CAP Model for Your Application
+
+- **For banking and transactions** → Choose **CP (Consistency + Partition Tolerance)**.
+- **For social media and e-commerce** → Choose **AP (Availability + Partition Tolerance)**.
+- **For local applications** → **CA (Consistency + Availability)** is fine.
+
+## 7. Conclusion
+
+The CAP theorem helps architects decide between consistency, availability, and partition tolerance when designing distributed systems. Since network failures are inevitable, most distributed databases sacrifice consistency (AP) or availability (CP), but never partition tolerance.
+
+
+---
+# **Scaling in System Design**
+---
