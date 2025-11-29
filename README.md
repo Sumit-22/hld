@@ -260,3 +260,105 @@ To improve performance, we can apply the following techniques:
 
 ## Conclusion
 Latency is a critical factor in system design that affects user experience and performance. Understanding different types of latency and applying optimization techniques can help build scalable and efficient systems.
+
+# Content Delivery Networks (CDNs) in System Design
+
+## 1. What is a CDN?
+A Content Delivery Network (CDN) is a system of distributed servers that helps deliver content (like images, videos, and web pages) quickly to users by caching it in multiple locations worldwide.
+
+### Why do we use CDNs?
+CDNs reduce latency and improve load times by serving content from a server closer to the user rather than always relying on the origin server.
+
+## 2. How CDNs Work
+CDNs operate using a network of edge servers, which cache content from an origin server. When a user requests content:
+
+- **Request Routing** – The CDN determines the nearest server to the user.
+- **Cache Lookup** – If the requested content is available on the edge server, it is delivered instantly.
+- **Origin Fetch** – If the content is not cached, the edge server requests it from the origin server and stores it for future requests.
+
+This mechanism significantly reduces the time needed to serve content.
+
+## 3. Benefits of Using CDNs
+CDNs improve system performance in multiple ways:
+
+### 1. Reduced Latency
+- **Without a CDN**: A user in India accessing a website hosted in the US experiences higher latency.
+- **With a CDN**: The content is cached in India, reducing round-trip time.
+
+### 2. Faster Load Times
+- Less data needs to be fetched from the origin server.
+- Optimized delivery of assets like images, CSS, and JavaScript.
+
+### 3. Reduced Server Load
+- The origin server handles fewer requests.
+- CDNs distribute traffic, preventing overload.
+
+### 4. Improved Availability & Reliability
+- If the origin server fails, cached content is still served.
+- Load balancing ensures continuous availability.
+
+### 5. DDoS Protection
+- CDNs absorb traffic spikes and protect against Distributed Denial of Service (DDoS) attacks.
+- They act as a buffer between attackers and the origin server.
+
+## 4. Types of CDNs
+CDNs can be categorized based on their functionality:
+
+- **Caching CDNs** – Store and serve static content like images, videos, CSS, and JavaScript.
+- **Dynamic Content CDNs** – Optimize dynamic content like personalized web pages.
+- **Streaming CDNs** – Deliver high-quality live and on-demand videos.
+- **Security CDNs** – Protect against cyber threats like DDoS and bot attacks.
+
+## 5. CDN Architecture
+CDN architecture consists of several key components:
+
+- **Origin Server** – The main server where the original content is stored.
+- **Edge Servers** – Distributed servers that cache content closer to users.
+- **PoPs (Points of Presence)** – Data centers where edge servers are located.
+- **Load Balancers** – Distribute traffic efficiently to reduce congestion.
+- **Anycast DNS** – Routes users to the nearest server automatically.
+
+## 6. CDN Optimization Techniques
+To maximize CDN efficiency, companies use several techniques:
+
+### 1. Caching Strategies
+- **Time-to-Live (TTL)**: Determines how long content stays in the cache.
+- **Cache Invalidation**: Ensures outdated content is removed or updated.
+- **Stale-While-Revalidate**: Serves old content while fetching a fresh copy.
+
+### 2. Compression & Optimization
+- **Gzip & Brotli**: Compress text-based files to reduce transfer size.
+- **Image Optimization**: WebP or JPEG compression reduces image load time.
+
+### 3. Load Balancing
+- **Geo Load Balancing**: Directs users to the nearest CDN server.
+- **Traffic Routing**: Uses real-time traffic conditions to optimize delivery.
+
+### 4. Secure Content Delivery
+- **HTTPS Everywhere**: Encrypts data for security.
+- **Token Authentication**: Ensures authorized users access premium content.
+
+## 7. Popular CDN Providers
+Some well-known CDN providers include:
+
+- **Cloudflare** – Security-focused, free-tier available.
+- **Akamai** – Enterprise-grade, widely used by large organizations.
+- **AWS CloudFront** – Integrates with Amazon Web Services.
+- **Google Cloud CDN** – Works with Google Cloud Platform.
+- **Fastly** – Optimized for real-time streaming.
+
+## 8. Real-World Examples
+- **Netflix**: Uses CDNs to deliver high-definition video with minimal buffering.
+- **Amazon**: Uses CloudFront to speed up e-commerce site load times.
+- **Facebook & Instagram**: Use CDNs to load images and videos instantly.
+
+## 9. When Not to Use a CDN
+While CDNs are beneficial, they may not be ideal in certain situations:
+
+- **Highly Dynamic Content** – If content changes frequently, caching is ineffective.
+- **Low-Traffic Websites** – The cost may outweigh the benefits.
+- **Strict Data Residency Rules** – Some organizations must store data in specific locations.
+
+## Conclusion
+CDNs play a crucial role in reducing latency, improving performance, and increasing availability. They are essential for handling global traffic efficiently and securing web applications.
+
