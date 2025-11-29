@@ -1540,3 +1540,119 @@ A streaming service consists of the following major components:
 - ✔ **Scalability** & **low-latency** are the biggest challenges.
 
 ---
+# Caching
+---
+
+## 1. What is Caching?
+**Caching** is a technique used to store frequently accessed data in a fast storage layer (like RAM) to reduce the time required to fetch it.
+
+Think of it like a bookmark in a book—instead of flipping through all pages to find a chapter, you jump directly to your bookmark.
+
+### Why is Caching Important?
+✔ **Faster Data Access** → Reduces database and API response time.  
+✔ **Reduces Load on Servers** → Improves scalability and performance.  
+✔ **Handles High Traffic** → Prevents database overload.
+
+## 2. Where is Caching Used?
+Caching can be applied at different layers of a system:
+
+| **Type of Cache**                | **Where It’s Used**                             | **Example**                        |
+|-----------------------------------|------------------------------------------------|------------------------------------|
+| **Database Cache**                | Stores frequently accessed queries in memory   | Redis, Memcached                  |
+| **Application Cache**             | Stores API responses or computed values        | In-memory caching, local storage  |
+| **Content Delivery Network (CDN) Cache** | Stores static content close to users         | Cloudflare, AWS CloudFront        |
+| **Browser Cache**                 | Stores web resources locally on user’s browser | JavaScript, CSS, images           |
+| **Operating System Cache**        | Speeds up disk and memory operations           | Page cache, disk buffer           |
+
+## 3. How Does Caching Work? (Step-by-Step Process)
+1. User requests data (e.g., fetching a product from an e-commerce site).
+2. Cache is checked first → If data is found (**cache hit**), return it instantly.
+3. If not found (**cache miss**), query the database and store the result in the cache.
+4. Next time, the data is served from the cache instead of the database.
+
+## 4. Types of Caching Strategies
+### A. Cache-Aside (Lazy Loading)
+📌 The application first checks the cache. If data is not found, it fetches it from the database and stores it in the cache for future use.
+
+- ✔ **Pros** → Simple and efficient, updates automatically.
+- ❌ **Cons** → First request is slow (cache miss).
+
+📌 **Example**:  
+A user searches for "iPhone 15" on an e-commerce website.  
+If it's not in cache, fetch from the database and store in Redis.  
+Next time, it is served instantly from Redis.
+
+### B. Write-Through Cache
+📌 Every write operation updates both the database and the cache.
+
+- ✔ **Pros** → Ensures cache and database are always in sync.
+- ❌ **Cons** → Slower writes due to double writing (cache + DB).
+
+📌 **Example**:  
+When a user adds a product review, it's stored in both Redis and MySQL.  
+This ensures the cache is always updated.
+
+### C. Write-Back (Write-Behind) Cache
+📌 The application writes data only to the cache first, and later syncs it to the database asynchronously.
+
+- ✔ **Pros** → Super fast writes, reduces DB load.
+- ❌ **Cons** → Risk of data loss if cache crashes before syncing to DB.
+
+📌 **Example**:  
+User adds an item to the cart, it's first stored in Redis.  
+Later, it syncs to MySQL in batches.
+
+### D. Read-Through Cache
+📌 The application always queries the cache. If the cache doesn’t have data, it fetches it from the DB and updates the cache.
+
+- ✔ **Pros** → Automates cache population, no manual writes needed.
+- ❌ **Cons** → Adds extra complexity to the system.
+
+📌 **Example**:  
+Netflix recommendations are preloaded in the cache so users get instant results.
+
+## 5. Cache Eviction Policies (When to Remove Old Data?)
+Since caches have limited storage, we must remove old data intelligently.
+
+| **Policy**                     | **How It Works**                                | **When to Use?**                          |
+|---------------------------------|------------------------------------------------|------------------------------------------|
+| **Least Recently Used (LRU)**   | Removes the least accessed item first          | General-purpose caching                 |
+| **Least Frequently Used (LFU)** | Removes items used the least over time         | When some data is always needed         |
+| **First In, First Out (FIFO)**  | Removes the oldest cached item first           | Simple, but not very efficient          |
+| **Time-To-Live (TTL)**          | Data expires after a fixed time (e.g., 10 min)  | When data changes frequently            |
+
+📌 **Example**:  
+Instagram stories expire after 24 hours, so caching them for a few hours makes sense.  
+Stock prices need frequent updates, so TTL-based caching is used.
+
+## 6. Where is Caching Used in Real Life?
+✔ **Google Search** → Frequently searched queries are cached for instant results.  
+✔ **YouTube & Netflix** → Popular videos are cached on CDN edge servers.  
+✔ **E-commerce (Amazon, Flipkart)** → Product details & prices are stored in Redis for quick access.  
+✔ **Social Media (Facebook, Twitter)** → User timelines and notifications are cached for speed.  
+✔ **Stock Market Apps** → Real-time stock prices are cached to reduce API load.
+
+## 7. Technologies Used in Caching
+| **Purpose**                 | **Technology Used**                          |
+|-----------------------------|----------------------------------------------|
+| **In-Memory Cache**         | Redis, Memcached                           |
+| **Database Cache**          | PostgreSQL, MySQL Query Cache              |
+| **CDN Cache**               | Cloudflare, AWS CloudFront, Akamai         |
+| **Application Cache**       | Spring Cache, Ehcache, Guava Cache         |
+| **Browser Cache**           | Service Workers, IndexedDB                 |
+
+## 8. Challenges in Caching
+| **Problem**                  | **Solution**                                |
+|------------------------------|---------------------------------------------|
+| **Cache Inconsistency**       | Use Write-Through or Write-Back caching    |
+| **Cache Eviction Issues**     | Use LRU, LFU, or TTL policies             |
+| **Stale Data in Cache**       | Use TTL (Time-To-Live) expiration         |
+| **Cache Stampede (Too Many Requests at Once)** | Implement locking & request collapsing |
+| **Security Issues**          | Encrypt cache data if sensitive            |
+
+## 9. Summary – Why Caching is Important
+✔ Caching reduces latency and improves performance.  
+✔ Different caching strategies (Cache-Aside, Write-Through, etc.) are used based on needs.  
+✔ Cache eviction policies (LRU, TTL, etc.) help manage storage efficiently.  
+✔ Used in databases, APIs, web browsers, CDNs, and application layers.
+
