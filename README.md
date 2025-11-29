@@ -1656,3 +1656,186 @@ Stock prices need frequent updates, so TTL-based caching is used.
 ✔ Cache eviction policies (LRU, TTL, etc.) help manage storage efficiently.  
 ✔ Used in databases, APIs, web browsers, CDNs, and application layers.
 
+
+Caching is essential in system design to improve performance, reduce latency, and handle high traffic efficiently. Let’s go deep into different types of caching, applications, advantages, disadvantages, data invalidation strategies, and cache eviction policies.
+
+## 1. What is Caching?
+Caching is a technique used to store frequently accessed data in a fast storage layer (like RAM) so that future requests can be served quickly without querying the primary data source (database, API, etc.).
+
+### 🔹 Analogy:
+Imagine a library where students frequently request the same books. Instead of fetching the book from the store every time, the librarian keeps the most requested books on the front desk for quick access. This is caching.
+
+## 2. Types of Caching
+### A. In-Memory Cache
+- **Description**: Stores data directly in RAM for ultra-fast access.
+- **Use Case**: User sessions in web applications.
+- **Example Technologies**: Redis, Memcached
+- **❌ Downside**: If the system crashes, all data in memory is lost.
+
+### B. Database Cache
+- **Description**: Caches frequently queried database results in memory to reduce DB load.
+- **Use Case**: E-commerce websites caching product details.
+- **Example Technologies**: PostgreSQL Query Cache, MySQL Query Cache, Redis as a DB cache
+- **❌ Downside**: If the cache is not properly invalidated, stale data may be served.
+
+### C. CDN Cache (Content Delivery Network)
+- **Description**: Stores static content like images, videos, and HTML files close to users.
+- **Use Case**: Netflix, YouTube storing videos in CDN servers.
+- **Example Technologies**: Cloudflare, AWS CloudFront, Akamai
+- **❌ Downside**: Difficult to handle real-time updates if content changes frequently.
+
+### D. Application Cache
+- **Description**: Stores computed results or API responses within the application itself.
+- **Use Case**: Caching API responses to avoid redundant API calls.
+- **Example Technologies**: Spring Cache, Ehcache
+- **❌ Downside**: Requires manual cache invalidation when data changes.
+
+### E. Browser Cache
+- **Description**: Stores web assets (CSS, JavaScript, images, etc.) on the user’s device.
+- **Use Case**: Facebook, Twitter storing images, stylesheets, and scripts in the browser cache.
+- **❌ Downside**: Users may see old content if the cache is not refreshed properly.
+
+### F. Disk Cache
+- **Description**: Stores frequently accessed files on disk instead of RAM.
+- **Use Case**: Operating systems caching frequently used programs and files on SSD/HDD.
+- **❌ Downside**: Slower than RAM but helps in persistent caching.
+
+### G. Distributed Cache
+- **Description**: Cache is stored across multiple servers in a cluster.
+- **Use Case**: Amazon stores user sessions across multiple data centers for uninterrupted service.
+- **Example Technologies**: Redis Cluster, Amazon ElastiCache
+- **❌ Downside**: Complex synchronization needed between cache nodes.
+
+### H. Global Cache
+- **Description**: A cache shared across multiple applications or services.
+- **Use Case**: Global authentication services like Google Auth caching user login sessions.
+- **❌ Downside**: High network latency if the cache is too far from users.
+
+## 3. Applications of Caching
+- **Web Applications**: Reduce database load by caching user sessions, authentication tokens, and frequently accessed data.
+- **E-commerce**: Speed up product searches and recommendations by caching catalog data.
+- **Social Media**: Cache user profiles, friend lists, and timelines.
+- **Video Streaming**: CDN caching helps reduce buffering times.
+- **Gaming**: Cache game assets to minimize load times.
+
+## 4. Advantages of Caching
+- **Reduces latency**: Faster response times.
+- **Decreases server load**: Prevents database overload.
+- **Improves scalability**: Handles more users efficiently.
+- **Enhances user experience**: Quick page loads.
+
+## 5. Disadvantages of Caching
+- **Cache Inconsistency**: Stale data may be returned if not properly invalidated.
+- **Cache Misses**: If the data is not in the cache, a database query is needed.
+- **Storage Limitations**: Cache space is finite.
+- **Security Risks**: Sensitive data in cache must be encrypted.
+
+## 6. Cache Invalidation Strategies (How to Refresh Data?)
+Cache invalidation ensures that stale data is removed from cache when the underlying data changes.
+
+| Strategy           | How It Works                                        | Example                                 |
+|--------------------|-----------------------------------------------------|-----------------------------------------|
+| **Write-Through**   | Updates cache immediately when data is written to DB| Updating product stock in cache and DB together |
+| **Write-Back**      | Data is first written to cache, then asynchronously updated in DB | Storing user cart items in cache before persisting in DB |
+| **Write-Around**    | Writes data directly to DB but skips cache         | Reducing unnecessary cache updates for rarely accessed data |
+| **TTL (Time-to-Live)** | Sets expiration time for cache entries             | Cache expires after 10 minutes, forcing a fresh database fetch |
+
+## 7. Cache Eviction Policies (When to Remove Old Data?)
+Eviction policies manage how old data is removed from the cache:
+
+| Policy                      | How It Works                         | Use Case                             |
+|-----------------------------|--------------------------------------|--------------------------------------|
+| **Least Recently Used (LRU)**| Removes the least accessed item first| General-purpose caching (Redis default) |
+| **Least Frequently Used (LFU)** | Removes items used the least over time | Long-term caching needs              |
+| **First In, First Out (FIFO)** | Removes the oldest cached item first | Queued processing systems            |
+| **TTL (Time-to-Live)**       | Data expires after a set time        | Stock prices, real-time data         |
+
+### 📌 Example:
+- **Netflix** uses LRU caching to keep popular movies in memory while removing least-watched ones.
+
+## 8. Summary – Why Caching is Essential in System Design
+- **Reduces response time**, improves scalability, and enhances user experience.
+- Different caching techniques (In-Memory, CDN, Distributed, etc.) serve different use cases.
+- Proper invalidation and eviction policies prevent stale data issues.
+- Caching is used in databases, APIs, browsers, CDNs, applications, and storage systems.
+
+---
+# Cache Expiration Strategies: Time-Driven vs. Event-Driven Expirations
+
+Cache expiration is essential for maintaining data freshness and preventing stale data from being served to users. Two primary strategies for cache expiration are Time-Driven Expirations and Event-Driven Expirations.
+
+## 1. Time-Driven Expiration (TTL-Based Expiration)
+Time-driven expiration is based on a fixed time duration. The cache entry is removed after a specific period, regardless of whether the data is still relevant.
+
+### How It Works
+- Each cache entry is assigned a Time-to-Live (TTL) value.
+- When the TTL expires, the cache entry is automatically deleted.
+- Used when data changes periodically but not frequently.
+
+### Example Use Cases
+- ✔ **User session caching** → A user’s session expires after 30 minutes of inactivity.
+- ✔ **Stock market prices** → Prices expire every 10 seconds to refresh market data.
+- ✔ **Weather updates** → Cached weather reports expire every 15 minutes to fetch new data.
+- ✔ **DNS caching** → Domain name lookups have a TTL to refresh IP addresses.
+
+### Advantages
+- ✅ **Easy to implement** → Just set a TTL and let the cache manage expiration.
+- ✅ **Prevents memory overflow** → Old data gets removed automatically.
+- ✅ **Efficient for predictable expiration times**.
+
+### Disadvantages
+- ❌ **Might remove useful data** if it is still valid beyond its TTL.
+- ❌ **Can lead to cache misses** if too many entries expire at once.
+- ❌ **Not suitable for real-time updates** when data changes unpredictably.
+
+## 2. Event-Driven Expiration (Trigger-Based Expiration)
+Event-driven expiration happens when a specific event triggers the cache invalidation, instead of relying on a fixed time.
+
+### How It Works
+- When data changes in the database or another source, the cache is updated or cleared.
+- Used when data changes unpredictably.
+
+### Examples of triggers:
+- **Data update in DB** → Invalidate the corresponding cache entry.
+- **User logout** → Invalidate session cache immediately.
+
+### Example Use Cases
+- ✔ **E-commerce product inventory** → If stock count changes, immediately invalidate product cache.
+- ✔ **Social media posts** → When a user edits a post, the cache entry is refreshed.
+- ✔ **Real-time leaderboards** → Scores update after each match, not on a timer.
+- ✔ **User profile updates** → When a user changes their email, their cached profile is updated instantly.
+
+### Advantages
+- ✅ **Ensures data consistency** → No risk of stale data.
+- ✅ **More efficient than time-based expiration** when data updates are unpredictable.
+- ✅ **Works well for real-time systems** like gaming leaderboards, social media feeds.
+
+### Disadvantages
+- ❌ **More complex to implement** → Requires event listeners and cache synchronization.
+- ❌ **If the event system fails**, stale data might persist.
+- ❌ **Increased processing overhead** when many cache entries need to be invalidated quickly.
+
+## 3. Comparison: Time-Driven vs. Event-Driven Expiration
+
+| Feature                         | Time-Driven Expiration            | Event-Driven Expiration           |
+|----------------------------------|-----------------------------------|-----------------------------------|
+| **Trigger**                      | Fixed time (TTL)                  | Data updates/events               |
+| **Best for**                     | Periodic data refreshes          | Real-time updates                 |
+| **Use case**                     | Weather data, session caching    | Product stock, user profiles      |
+| **Implementation**               | Simple (just set TTL)            | Complex (needs event handling)    |
+| **Risk**                         | Stale data before TTL expires    | Event system failures             |
+
+## 4. Hybrid Approach (Time + Event Expiration)
+Many systems use both strategies together for better efficiency.
+
+### Example:
+- **Twitter timelines** → Cached for 10 minutes (TTL) but updated instantly when a user posts a new tweet (event-driven).
+- **E-commerce inventory** → Cached for 1 hour, but updated immediately when stock changes.
+
+## Final Thoughts
+- **Time-driven expiration** is simpler but may serve stale data.
+- **Event-driven expiration** ensures fresh data but is harder to implement.
+- A **hybrid approach** is often the best choice in large-scale systems.
+
+
+---
