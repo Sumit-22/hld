@@ -1353,3 +1353,50 @@ In **Passive Replication**, only one replica (the primary) processes the request
 - **Passive Replication** is used for leader-based systems where failover is rare but needed, and it has lower overhead but higher failover time.
 
 ---
+# Load Balancer – A Deep Dive
+---
+
+## 1. What is a Load Balancer?
+A **load balancer** is a system that distributes incoming network traffic across multiple servers to ensure no single server is overwhelmed. It helps with:
+- ✔ **High Availability** → Ensures servers don’t crash due to overload.
+- ✔ **Scalability** → Handles more users by spreading traffic efficiently.
+- ✔ **Fault Tolerance** → Redirects traffic if a server fails.
+
+## 2. Why Do We Need a Load Balancer?
+Imagine a restaurant with only one cashier. If 100 people arrive, the single cashier will get overloaded. But if there are 5 cashiers, customers can be distributed among them, reducing waiting time.
+
+A load balancer acts like a restaurant manager, directing customers (requests) to different cashiers (servers).
+
+## 3. How Does a Load Balancer Work?
+1. A user makes a request (e.g., visiting a website).
+2. The load balancer receives the request and selects a healthy server.
+3. It forwards the request to that server.
+4. The server processes the request and sends back a response.
+
+## 4. Types of Load Balancers
+### A. Based on Where They Operate
+
+| Type | Works At | Example |
+|------|----------|---------|
+| **Network Load Balancer (NLB)** | TCP/UDP (Layer 4) | AWS NLB, HAProxy |
+| **Application Load Balancer (ALB)** | HTTP/HTTPS (Layer 7) | AWS ALB, Nginx, Traefik |
+
+### B. Based on How They Are Deployed
+
+| Type | Description | Example |
+|------|-------------|---------|
+| **Hardware Load Balancer** | Physical device handling traffic | F5 Big-IP, Citrix NetScaler |
+| **Software Load Balancer** | Software installed on servers | Nginx, HAProxy |
+| **Cloud Load Balancer** | Managed by cloud providers | AWS ELB, Azure LB, GCP Load Balancer |
+
+## 5. Load Balancing Algorithms
+Load balancers decide which server should handle a request using different strategies:
+
+| Algorithm | How It Works | Best For |
+|-----------|--------------|----------|
+| **Round Robin** | Sends requests to servers in a circular order | Equal workload distribution |
+| **Least Connections** | Sends requests to the server with the fewest active connections | Dynamic workloads (e.g., chat apps) |
+| **Least Response Time** | Chooses the server responding the fastest | Performance-sensitive apps |
+| **IP Hash** | Assigns users to specific servers based on IP address | Session persistence (e.g., shopping carts) |
+| **Weighted Round Robin** | Servers get different weights based on their capacity | Servers with different power levels |
+
