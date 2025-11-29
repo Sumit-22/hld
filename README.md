@@ -56,3 +56,32 @@ How the system will handle high traffic and future growth.
   - Caching (Redis) to speed up data retrieval.
 
 ---
+
+## Example of HLD for a URL Shortener
+Imagine you're designing a URL Shortener like bit.ly. Here's how HLD might look:
+
+### 1️⃣ Architecture Diagram
+User → Load Balancer → API Gateway → URL Shortener Service → Database (MongoDB) ↳ Cache (Redis)
+
+
+### 2️⃣ Module Breakdown
+- **User Service** → Handles authentication.
+- **Shortener Service** → Generates short URLs.
+- **Analytics Service** → Tracks clicks.
+
+### 3️⃣ Technology Stack
+- Backend: Spring Boot
+- Database: MongoDB
+- Cache: Redis
+- Security: OAuth2
+
+### 4️⃣ Data Flow
+- User enters a long URL.
+- Backend generates a short URL and stores it.
+- When the short URL is clicked, backend retrieves the original URL from the database or cache.
+
+### 5️⃣ API Design
+- `POST /shorten` → Converts long URL to short.
+- `GET /{shortCode}` → Redirects to original URL.
+
+---
