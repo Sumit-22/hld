@@ -470,3 +470,110 @@ To scale a system for higher throughput, consider:
 
 ## Conclusion
 Throughput is a key performance metric in web applications, databases, and network systems. Optimizing throughput requires techniques like caching, load balancing, parallelism, and scaling.
+
+# Availability in System Design
+
+## 1. What is Availability?
+Availability in system design refers to a system's ability to remain operational and accessible for users without downtime. It is typically measured as a percentage of uptime over a given period.
+
+### High Availability (HA)
+Ensures a system is always accessible, even during failures.
+
+### Formula for Availability:
+\[
+\text{Availability} = \left( \frac{\text{Uptime}}{\text{Uptime} + \text{Downtime}} \right) \times 100
+\]
+
+#### Example:
+- A system with 99.99% availability experiences ~52 minutes of downtime per year.
+- A system with 99.9% availability has ~8.76 hours of downtime per year.
+
+| **Availability %** | **Downtime Per Year** | **Downtime Per Month** |
+|--------------------|-----------------------|------------------------|
+| 99% (Two Nines)    | 3.65 days             | 7.2 hours              |
+| 99.9% (Three Nines)| 8.76 hours            | 43.8 minutes           |
+| 99.99% (Four Nines)| 52 minutes            | 4.38 minutes           |
+| 99.999% (Five Nines)| 5.26 minutes         | 26.3 seconds           |
+
+## 2. Factors Affecting Availability
+Several factors influence a system’s availability:
+
+### 1. Hardware Failures
+- Server crashes, disk failures, or power outages reduce availability.
+- **Solution**: Redundant servers and failover mechanisms.
+
+### 2. Software Bugs
+- Bugs in applications, OS crashes, or memory leaks cause downtime.
+- **Solution**: Automated testing and rolling deployments.
+
+### 3. Network Failures
+- ISP outages, DNS failures, or DDoS attacks can make a system unavailable.
+- **Solution**: Multiple network providers, CDNs, and load balancers.
+
+### 4. Database Issues
+- Deadlocks, corruption, or overloads can lead to downtime.
+- **Solution**: Replication, partitioning, and caching.
+
+### 5. Human Errors
+- Misconfigurations, accidental deletions, or security breaches.
+- **Solution**: Automated backups, version control, and monitoring.
+
+## 3. Strategies to Improve Availability
+### 1. Load Balancing
+- Distributes traffic across multiple servers to avoid overloading any single one.
+- **Examples**: Nginx, HAProxy, AWS ELB.
+
+### 2. Redundancy & Failover
+- **Active-Passive Failover**: A backup server takes over if the primary one fails.
+- **Active-Active Failover**: Multiple servers handle requests simultaneously.
+
+### 3. Database Replication & Sharding
+- **Master-Slave Replication**: One master database for writes, multiple replicas for reads.
+- **Sharding**: Splitting data across multiple databases to prevent overload.
+
+### 4. Caching
+- Reduces database load by storing frequently accessed data.
+- **Examples**: Redis, Memcached, Cloudflare CDN.
+
+### 5. Auto Scaling
+- Automatically adds or removes servers based on demand.
+- **Examples**: AWS Auto Scaling, Kubernetes Horizontal Pod Autoscaler (HPA).
+
+### 6. Distributed Systems
+- Using multiple data centers across different regions improves fault tolerance.
+- **Example**: Netflix runs on AWS across multiple regions.
+
+### 7. Backup & Disaster Recovery
+- Regular backups prevent data loss in case of failures.
+- Disaster Recovery (DR) Plans ensure quick recovery after major failures.
+
+## 4. High Availability Architectures
+### 1. Single Data Center (Low Availability)
+- A single server or data center means if it fails, the entire system is down.
+- **Example**: Small startups with limited resources.
+
+### 2. Multi-Zone Deployment (Medium Availability)
+- Deploying in multiple availability zones within the same cloud provider.
+- **Example**: AWS Multi-AZ RDS (Database replication across regions).
+
+### 3. Multi-Region Deployment (High Availability)
+- Deploying in multiple regions across the globe ensures zero downtime.
+- **Example**: Google Search, Netflix, Amazon.
+
+## 5. Trade-offs Between Availability & Other Factors
+### Availability vs. Consistency
+- **CAP Theorem** states that a distributed system cannot have 100% availability and consistency at the same time.
+- **Example**: AP systems (Amazon DynamoDB, Cassandra) prioritize availability over strict consistency.
+
+### Availability vs. Cost
+- Higher availability means more servers, backups, and redundancy, increasing costs.
+- **Example**: AWS multi-region deployments are expensive but ensure 99.999% uptime.
+
+## 6. Real-World Examples of High Availability Systems
+- **Google Search**: Uses multi-region deployments, load balancing, and failover mechanisms.
+- **Netflix**: Deploys across multiple AWS regions to avoid downtime.
+- **Amazon AWS**: Provides 99.999% availability for critical services like S3.
+
+## Conclusion
+High availability is crucial for mission-critical applications and can be achieved through load balancing, redundancy, database replication, caching, and distributed systems.
+
