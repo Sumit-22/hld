@@ -1400,3 +1400,143 @@ Load balancers decide which server should handle a request using different strat
 | **IP Hash** | Assigns users to specific servers based on IP address | Session persistence (e.g., shopping carts) |
 | **Weighted Round Robin** | Servers get different weights based on their capacity | Servers with different power levels |
 
+## 6. Load Balancer Architectures
+### A. Single Load Balancer (Basic Setup)
+- One load balancer distributes traffic across multiple servers.
+- **Issue**: If the load balancer fails, the entire system goes down.
+
+### B. Multiple Load Balancers (Highly Available Setup)
+- Uses two or more load balancers in active-passive or active-active mode.
+- **Fix**: Resolves the single point of failure problem.
+
+### C. Global Load Balancing
+- Used by companies like Google, Facebook, Netflix.
+- Distributes traffic across multiple data centers worldwide to reduce latency.
+- Example: Cloudflare, AWS Route 53, Google Cloud Load Balancer.
+
+## 7. Load Balancer in Real-Life Use Cases
+- ✔ **E-commerce Websites** (Amazon, Flipkart) → Handles thousands of users shopping at the same time.
+- ✔ **Streaming Services** (Netflix, YouTube) → Ensures smooth video playback without buffering.
+- ✔ **Social Media** (Facebook, Twitter) → Distributes requests across data centers worldwide.
+- ✔ **Banking Apps** → Prevents downtime during peak transaction periods.
+
+## 8. Advantages & Disadvantages of Load Balancers
+
+### ✅ Advantages:
+- ✔ **Prevents Overloading** → Ensures smooth performance.
+- ✔ **Handles Failures** → Automatically reroutes traffic if a server crashes.
+- ✔ **Improves Speed** → Distributes traffic efficiently.
+- ✔ **Enables Scalability** → Allows adding more servers easily.
+
+### ❌ Disadvantages:
+- ✖ **Single Point of Failure** (if only one load balancer is used).
+- ✖ **Extra Cost** (especially hardware and cloud-based load balancers).
+- ✖ **Latency** (if not configured properly).
+
+## 9. Conclusion
+A **load balancer** is a traffic controller that ensures servers don’t get overloaded.  
+Different types (NLB, ALB) and algorithms help distribute traffic efficiently.  
+It is essential for scalable, high-performance web applications.
+
+---
+# How a Streaming Service Works – A System Design Breakdown
+---
+
+## What is a Streaming Service?
+A **streaming service** (like Netflix, YouTube, or Spotify) allows users to watch videos or listen to audio without downloading the entire file. Instead, data is sent in small chunks over the internet, allowing playback to start almost instantly.
+
+## 1. High-Level Architecture of a Streaming Service
+A streaming service consists of the following major components:
+- **User Requests a Video/Audio** → Sent to a Load Balancer.
+- **Load Balancer Distributes Traffic** → Chooses a nearby Streaming Server.
+- **Content Delivery Network (CDN)** Delivers Chunks → Ensures fast playback.
+- **Playback Buffering & Adaptive Streaming** → Adjusts quality based on internet speed.
+
+## 2. Step-by-Step Flow of Streaming
+### A. Content Upload & Processing (For Video Platforms Like YouTube)
+#### User Uploads Video
+- The video is stored in a **Storage System** (e.g., AWS S3, Google Cloud Storage).
+
+#### Video Encoding & Transcoding
+- The video is converted into multiple formats & resolutions (e.g., 144p, 360p, 1080p).
+- **Why?** → Different devices (mobile, PC, TV) need different formats.
+
+#### Content is Stored in a Distributed System
+- Large services use **Distributed Object Storage** (e.g., AWS S3, Google Cloud Storage).
+- A **Metadata Database** stores video details (title, duration, owner, etc.).
+
+### B. User Requests a Video
+#### Load Balancer Routes the Request
+- If multiple servers exist, a **Load Balancer** directs the request to the best server.
+- Load Balancers use **Least Latency**, **Round Robin**, or **Geo-location** based routing.
+
+#### Content Delivery Network (CDN) Delivers the Video
+- A **CDN** caches the video close to the user (Edge Servers).
+- **Example CDNs**: Cloudflare, Akamai, AWS CloudFront.
+- **Why?** → Reduces latency & prevents server overload.
+
+### C. Video Playback & Adaptive Streaming
+#### Streaming in Chunks
+- Instead of downloading the full file, the video is sent in small parts (HLS, DASH protocols).
+- The video player buffers a few seconds ahead to prevent pauses.
+
+#### Adaptive Bitrate Streaming (ABR)
+- If the user’s internet is slow, the quality drops to 480p or 360p automatically.
+- If the internet improves, it increases to 1080p or 4K.
+
+## 3. Detailed System Design Components
+### A. Storage Layer
+- **Database for Metadata** → Stores video details (PostgreSQL, MongoDB, Cassandra).
+- **Object Storage** → Stores actual video files (AWS S3, Google Cloud Storage).
+
+### B. Processing Layer
+- **Transcoding Services** → Converts videos to different resolutions (FFmpeg, AWS MediaConvert).
+- **Content Indexing & Recommendation Engine** → Suggests videos based on user behavior.
+
+### C. Delivery Layer
+- **CDN & Edge Servers** → Cache popular content close to users.
+- **Load Balancer** → Distributes traffic across multiple streaming servers.
+- **WebSocket & TCP/IP Protocols** → Ensures smooth live streaming.
+
+## 4. Technologies Used in a Streaming Service
+| Component              | Technologies Used                              |
+|------------------------|------------------------------------------------|
+| **Storage**             | AWS S3, Google Cloud Storage, HDFS            |
+| **Database**            | PostgreSQL, MongoDB, Cassandra                |
+| **Transcoding**         | FFmpeg, AWS Elemental                        |
+| **CDN**                 | Cloudflare, Akamai, AWS CloudFront            |
+| **Load Balancer**       | Nginx, HAProxy, AWS ELB                      |
+| **Streaming Protocols** | HLS, DASH, WebRTC                             |
+| **Monitoring & Logging**| Prometheus, Grafana, ELK Stack               |
+
+## 5. How Live Streaming Works (Twitch, YouTube Live, etc.)
+**Live streaming** is slightly different from video-on-demand:
+1. **User Sends a Live Video Feed** → Streamed via RTMP Protocol to a streaming server.
+2. **Live Encoding** → Video is compressed and converted into chunks in real-time.
+3. **CDN Distribution** → Live chunks are sent to multiple edge locations.
+4. **Viewer Playback** → Users receive low-latency streams based on internet speed.
+
+## 6. Challenges in Building a Streaming Service
+
+| Challenge             | Solution                                      |
+|-----------------------|-----------------------------------------------|
+| **High Latency**       | Use CDNs & Adaptive Streaming (HLS/DASH)      |
+| **Scalability**        | Use Load Balancers & Microservices            |
+| **Storage Costs**      | Store in Cloud (AWS S3, GCS) & delete old content |
+| **Data Consistency**   | Use distributed databases like Cassandra      |
+| **Personalized Recommendations** | Use Machine Learning & AI              |
+
+## 7. Real-World Examples & Architectures
+| Streaming Service      | Key Features                                |
+|------------------------|---------------------------------------------|
+| **Netflix**             | Uses AWS for storage & CDNs for faster delivery |
+| **YouTube**             | Stores billions of videos & transcodes in real-time |
+| **Twitch**              | Focuses on low-latency live streaming      |
+| **Spotify**             | Uses CDNs to reduce buffering in music playback |
+
+## 8. Conclusion
+- ✔ **Streaming services** use **CDNs**, **Load Balancers**, and **Adaptive Bitrate Streaming** to deliver content smoothly.
+- ✔ **Storage**, **processing**, and **real-time delivery** are key components.
+- ✔ **Scalability** & **low-latency** are the biggest challenges.
+
+---
