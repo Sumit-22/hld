@@ -423,3 +423,50 @@ Throughput is measured using different tools and metrics:
 
 ## 4. How to Improve Throughput
 To scale a system for higher throughput, consider:
+
+### 1. Load Balancing
+- Distribute requests across multiple servers.
+- Use Round Robin, Least Connections, or Hash-based routing.
+
+### 2. Caching
+- **Redis/Memcached**: Store frequently accessed data in memory.
+- **CDNs**: Serve static content closer to users.
+
+### 3. Database Optimization
+- Indexing, query tuning, and partitioning reduce database load.
+- Read replicas improve read throughput.
+
+### 4. Asynchronous Processing
+- Offload tasks using message queues (Kafka, RabbitMQ).
+- Use event-driven architectures instead of synchronous requests.
+
+### 5. Network Optimization
+- Gzip/Brotli compression reduces bandwidth usage.
+- HTTP/2 & QUIC protocols improve data transfer efficiency.
+
+### 6. Horizontal Scaling
+- Add more servers instead of upgrading a single machine.
+- Stateless microservices allow easy scaling.
+
+## 5. Real-World Examples of High Throughput Systems
+### 1. Google Search
+- Handles hundreds of thousands of queries per second.
+- Uses distributed databases and caching for high throughput.
+
+### 2. Netflix Streaming
+- Streams high-quality video to millions of users simultaneously.
+- Uses CDNs, parallel data pipelines, and microservices.
+
+### 3. Payment Gateways (Visa, PayPal, Stripe)
+- Process thousands of transactions per second.
+- Use sharding, failover mechanisms, and caching.
+
+## 6. Trade-offs Between Throughput and Other Metrics
+### Higher Throughput vs. Higher Latency
+- Batching requests increases throughput but introduces delay.
+
+### Consistency vs. Throughput
+- Databases like Cassandra favor availability & throughput over strict consistency (CAP theorem).
+
+## Conclusion
+Throughput is a key performance metric in web applications, databases, and network systems. Optimizing throughput requires techniques like caching, load balancing, parallelism, and scaling.
