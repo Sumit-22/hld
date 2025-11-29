@@ -577,3 +577,119 @@ Several factors influence a system’s availability:
 ## Conclusion
 High availability is crucial for mission-critical applications and can be achieved through load balancing, redundancy, database replication, caching, and distributed systems.
 
+
+# Consistency in System Design
+
+## 1. What is Consistency?
+Consistency in system design means that all nodes in a distributed system have the same data at any given time. When a client reads data, it should get the most recent and correct value.
+
+### Consistency vs Availability vs Partition Tolerance (CAP Theorem)
+According to CAP Theorem, a distributed system can only guarantee two out of the three properties:
+
+- **Consistency (C)**: Every read gets the latest write.
+- **Availability (A)**: Every request receives a response, even if some nodes fail.
+- **Partition Tolerance (P)**: The system continues to function despite network failures.
+
+| **System Type** | **Prioritizes** |
+|-----------------|-----------------|
+| CP (Consistency + Partition Tolerance) | Guarantees correct data but might sacrifice availability. Example: Relational Databases (PostgreSQL, MySQL with strong consistency). |
+| AP (Availability + Partition Tolerance) | Always responds but might return stale data. Example: NoSQL Databases like DynamoDB, Cassandra. |
+| CA (Consistency + Availability) | Works only in ideal conditions without network failures (impractical in distributed systems). |
+
+## 2. Types of Consistency Models
+Different systems choose different levels of consistency based on their use case.
+
+### 1. Strong Consistency
+Guarantees that all nodes see the same data immediately after a write.
+- **Used in**: Banking, financial transactions, and critical applications.
+- **Example**: In a banking system, if you transfer ₹500, your updated balance should reflect immediately.
+- **Implementations**: Distributed locking (Paxos, Raft), Single-leader databases (PostgreSQL, MySQL with primary-replica setup).
+- **Trade-off**: Slower performance because all writes must be acknowledged before proceeding.
+
+### 2. Eventual Consistency (Weaker but Faster)
+Guarantees that all replicas will eventually be consistent, but reads might see stale data.
+- **Used in**: Social media, messaging apps, and content delivery networks (CDNs).
+- **Example**: A Facebook status update might take a few seconds to appear on another user’s timeline.
+- **Implementations**: NoSQL Databases (Cassandra, DynamoDB, MongoDB with replica sets).
+- **Trade-off**: Fast reads and writes, but data might not be up-to-date immediately.
+
+### 3. Read-Your-Own-Writes Consistency
+Guarantees that a user always sees their own updates immediately.
+- **Used in**: User dashboards, profile updates.
+- **Example**: If you change your LinkedIn profile picture, you should see the new image immediately, even if others still see the old one.
+
+### 4. Causal Consistency
+Ensures that if one event affects another, the order is preserved.
+- **Example**: If Alice sends a message to Bob, Bob should see it before replying.
+
+### 5. Monotonic Reads
+Ensures that a user never sees older data after reading a newer version.
+- **Example**: If a stock price updates to ₹100, you won’t see ₹95 again.
+
+## 3. How to Ensure Consistency in Distributed Systems?
+
+### 1. Distributed Consensus Algorithms
+Used to keep all replicas in sync.
+- **Examples**: Paxos, Raft (Used in Apache Zookeeper, Kubernetes, etcd).
+
+### 2. Quorum-Based Writes and Reads
+Quorum (N, R, W) model:
+- **N** = Total number of replicas.
+- **R** = Minimum replicas required for a read.
+- **W** = Minimum replicas required for a write.
+Ensures consistency by requiring enough nodes to agree on updates.
+- **Example**: Cassandra uses tunable consistency with quorum reads/writes.
+
+### 3. Conflict Resolution Strategies
+Used in eventual consistency models to resolve differences between nodes.
+- **Techniques**:
+  - Last Write Wins (LWW) – Latest timestamp is used.
+  - Version Vector (Vector Clocks) – Tracks different versions to detect conflicts.
+  - Application-Level Resolution – Manual merging of conflicting data.
+
+### 4. Leader-Based Replication (For Strong Consistency)
+One node (leader) handles writes, and others (followers) replicate data.
+- **Example**: MySQL with primary-replica replication.
+- **Drawback**: Leader failure can cause downtime unless failover mechanisms exist.
+
+### 5. Multi-Version Concurrency Control (MVCC)
+Each update creates a new version instead of overwriting data.
+- **Used in**: Databases like PostgreSQL, MySQL (InnoDB), and MongoDB.
+
+## 4. Trade-offs in Consistency
+
+| **Consistency Model** | **Pros** | **Cons** |
+|-----------------------|----------|----------|
+| Strong Consistency | Guarantees correct, up-to-date data | Slower performance, increased latency |
+| Eventual Consistency | Fast reads/writes, better availability | Stale reads, possible conflicts |
+| Quorum-Based Consistency | Balances speed and correctness | Adds complexity, requires tuning |
+
+### Consistency vs Performance
+Higher consistency means slower performance (due to synchronization overhead).
+Lower consistency improves speed but might return outdated data.
+
+### Consistency vs Availability (CAP Theorem)
+If a network partition occurs, choosing consistency means rejecting requests until synchronization is complete.
+- **Example**: Banks prefer consistency over availability (incorrect balances are unacceptable).
+- **Example**: Social media prefers availability over consistency (eventual consistency is fine).
+
+## 5. Real-World Examples of Consistency Models
+
+| **System** | **Consistency Model** | **Reason** |
+|------------|-----------------------|-----------|
+| Banking (PayPal, Visa) | Strong Consistency | Transactions must be accurate |
+| Google Search Index | Eventual Consistency | Faster updates, slight delay is acceptable |
+| WhatsApp Message Delivery | Causal Consistency | Message order must be maintained |
+| Amazon DynamoDB | Eventual or Strong Consistency (Configurable) | Balances availability and consistency |
+| Git Version Control | Multi-Version Consistency | Branching and merging ensure correctness |
+
+## 6. How to Choose the Right Consistency Model?
+- **For financial transactions** → Strong consistency (Correctness is more important).
+- **For social media feeds** → Eventual consistency (Availability is more important).
+- **For e-commerce inventory** → Quorum-based consistency (Ensures valid stock levels).
+- **For real-time messaging** → Causal consistency (Ensures correct order of messages).
+
+## 7. Conclusion
+Consistency is crucial for ensuring data correctness in distributed systems. The choice between strong, eventual, and quorum-based consistency depends on the use case. Optimizing consistency often involves trade-offs with performance and availability.
+
+
