@@ -13,3 +13,10 @@ HLD typically consists of the following elements:
 ### 1️⃣ Architecture Diagram
 A visual representation of how different components interact.
 - **Example**: A web application’s HLD may include frontend (React), backend (Spring Boot), database (MySQL), and caching system (Redis).
+
+### 2️⃣ Module Breakdown
+Explains different modules in the system and their purpose.
+- **Example**: An e-commerce system may have:
+  - User Module (Handles login, signup)
+  - Product Module (Stores product details)
+  - Order Module (Manages orders and payments)
