@@ -693,3 +693,107 @@ If a network partition occurs, choosing consistency means rejecting requests unt
 Consistency is crucial for ensuring data correctness in distributed systems. The choice between strong, eventual, and quorum-based consistency depends on the use case. Optimizing consistency often involves trade-offs with performance and availability.
 
 
+# Partition Tolerance in System Design
+
+## 1. What is Partition Tolerance?
+
+Partition Tolerance (P) in system design means that a distributed system continues to operate even if some nodes cannot communicate due to network failures.
+
+A network partition occurs when communication between nodes is lost due to failures (e.g., data center outages, server crashes, network congestion).  
+A partition-tolerant system ensures that it still functions correctly despite network partitions.
+
+## 2. CAP Theorem and Partition Tolerance
+
+The CAP Theorem states that a distributed system can have at most two out of three properties:
+
+- **Consistency (C)** – Every read gets the latest write.
+- **Availability (A)** – Every request gets a response, even during failures.
+- **Partition Tolerance (P)** – The system remains operational despite network failures.
+
+| Type | Prioritizes |
+|------|-------------|
+| **CP (Consistency + Partition Tolerance)** | Guarantees correct data but sacrifices availability. Example: MongoDB with strong consistency. |
+| **AP (Availability + Partition Tolerance)** | Ensures uptime but may return stale data. Example: DynamoDB, Cassandra. |
+| **CA (Consistency + Availability)** | Works only if there are no partitions (not practical in distributed systems). |
+
+## 3. Causes of Network Partitions
+
+Partition tolerance is necessary in distributed systems because networks are unreliable. Common causes include:
+
+- **Data Center Failures**: A power outage in one region makes that part of the system unreachable.  
+  Example: AWS us-east-1 outage affects applications globally.
+  
+- **Network Congestion & Latency Issues**: High traffic can cause delays or dropped connections between nodes.  
+  Example: Microservices in Kubernetes failing due to slow network responses.
+
+- **Hardware Failures**: Server crashes, faulty network cables, or router failures can partition the network.  
+  Example: A faulty switch disconnects half of a distributed database.
+
+- **DDoS Attacks**: Malicious traffic overloads the network, making some nodes unreachable.  
+  Example: Cloudflare mitigates DDoS attacks to maintain partition tolerance.
+
+## 4. How Systems Handle Partition Tolerance?
+
+When a partition occurs, the system must decide how to handle unavailable nodes. Different strategies exist:
+
+1. **AP Systems (Availability + Partition Tolerance)**  
+   The system continues to respond but might return outdated data.  
+   Example: Amazon DynamoDB, Apache Cassandra, CouchDB.  
+   *Trade-off*: Reads might not be consistent, but the system remains online.
+
+2. **CP Systems (Consistency + Partition Tolerance)**  
+   The system ensures consistency but may reject requests until all nodes sync.  
+   Example: MongoDB (when configured with strong consistency), HBase, Zookeeper.  
+   *Trade-off*: Slower responses or downtime during partitions.
+
+3. **Quorum-Based Reads/Writes (Balanced Approach)**  
+   Uses majority voting to decide if a request is valid.  
+   Example: Cassandra uses quorum-based writes to ensure data correctness.  
+   *Trade-off*: Improves consistency but adds latency.
+
+## 5. Techniques to Improve Partition Tolerance
+
+1. **Data Replication**  
+   Keeps copies of data across multiple nodes.  
+   Example: Google Spanner replicates data globally to handle failures.
+
+2. **Multi-Region Deployment**  
+   Distributes services across different data centers.  
+   Example: Netflix runs in multiple AWS regions to stay online.
+
+3. **Leader Election (Consensus Protocols)**  
+   Elects a new leader if the current one fails.  
+   Example: Raft & Paxos in Kubernetes leader election.
+
+4. **Conflict Resolution Strategies**  
+   When network partitions heal, conflicts must be resolved.  
+   Example: Last Write Wins (LWW) in DynamoDB, Vector Clocks in Riak.
+
+## 6. Real-World Examples of Partition-Tolerant Systems
+
+| System               | Partition-Tolerant? | Type                          |
+|----------------------|---------------------|-------------------------------|
+| Amazon DynamoDB       | Yes                 | AP (Eventual Consistency)     |
+| Google Spanner        | Yes                 | CP (Strong Consistency)       |
+| Apache Cassandra      | Yes                 | AP (Eventual Consistency)     |
+| MongoDB              | Yes                 | CP (Strong Consistency Mode)  |
+| Kafka/Zookeeper      | Yes                 | CP (Ensures data integrity)   |
+
+## 7. Trade-offs in Partition Tolerance
+
+| Approach                     | Pros                              | Cons                             |
+|------------------------------|-----------------------------------|----------------------------------|
+| **AP Systems (DynamoDB, Cassandra)** | High availability                | Data may be inconsistent temporarily |
+| **CP Systems (MongoDB, Zookeeper)** | Strong consistency               | Might reject requests during failure |
+| **Quorum-Based (Cassandra, Spanner)** | Balances availability and consistency | Adds latency                   |
+
+## 8. When to Choose Partition-Tolerant Systems?
+
+- For real-time applications (e.g., stock trading, banking) → **CP System (Strong Consistency)**.
+- For social media, caching, or logs → **AP System (High Availability)**.
+- For a balance between consistency & availability → **Quorum-based model (Cassandra, Spanner)**.
+
+## 9. Conclusion
+
+Partition tolerance is essential for any distributed system because network failures are inevitable. The system design must choose between Availability (AP) or Consistency (CP) based on the business needs.
+
