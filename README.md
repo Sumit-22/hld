@@ -101,3 +101,84 @@ User → Load Balancer → API Gateway → URL Shortener Service → Database (M
 - **HLD** is like a roadmap for software development.
 - It ensures that the system is structured, scalable, and secure.
 - Once HLD is finalized, developers proceed with Low-Level Design (LLD) and coding.
+
+# Monolithic vs. Distributed Systems (Explained Simply)
+
+When designing software applications, you can choose between **Monolithic** and **Distributed** architectures. Let’s break them down in an easy-to-understand way.
+
+## 1️⃣ Monolithic System
+A **Monolithic system** is a single, unified application where all parts (frontend, backend, database, etc.) are tightly coupled and run as a single unit.
+
+### Example: A Traditional Web Application
+Imagine you’re building an e-commerce website where users can buy products. A monolithic approach means:
+- Frontend (UI), Backend (Business Logic), and Database are all in one big codebase.
+- If one part fails, the whole system might crash.
+- Everything is deployed together in one server.
+
+### How It Works
+User → Monolithic Server (Handles everything: UI, APIs, Database queries)
+
+
+### Pros of Monolithic Systems ✅
+- ✔ Simple to develop & deploy – One codebase, one deployment.
+- ✔ Easier debugging & testing – Everything runs in a single environment.
+- ✔ Better performance (for small apps) – No network latency between services.
+
+### Cons of Monolithic Systems ❌
+- ✖ Difficult to scale – Scaling means deploying everything, even if only one feature needs more resources.
+- ✖ Slower development – As the codebase grows, it becomes harder to manage.
+- ✖ Single point of failure – If one module crashes, the whole system might fail.
+
+### When to Use Monolithic Systems?
+- ✅ Small or Medium-sized applications.
+- ✅ Startups or MVPs (Minimal Viable Products).
+- ✅ Teams with limited DevOps resources.
+
+---
+
+## 2️⃣ Distributed System
+A **Distributed system** is where different parts of an application are split into separate services that communicate over a network.
+
+### Example: A Microservices-Based E-Commerce System
+Instead of a single monolithic system, we break it into multiple services:
+- User Service → Handles login/signup.
+- Product Service → Manages products.
+- Order Service → Handles orders and payments.
+- Notification Service → Sends emails and messages.
+Each of these runs independently and can be deployed separately.
+
+### How It Works
+User → API Gateway → [User Service] | [Product Service] | [Order Service] | [Database]
+
+
+### Pros of Distributed Systems ✅
+- ✔ Scalability – Services can scale independently.
+- ✔ Fault Tolerance – If one service fails, others continue working.
+- ✔ Faster Development – Teams can work on different services in parallel.
+- ✔ Technology Flexibility – Each service can use a different technology stack.
+
+### Cons of Distributed Systems ❌
+- ✖ Complex Communication – Services talk to each other via APIs, increasing network overhead.
+- ✖ Harder Debugging – More logs and services make it harder to trace errors.
+- ✖ Deployment & Maintenance Overhead – Requires advanced DevOps setup (Docker, Kubernetes, etc.).
+
+### When to Use Distributed Systems?
+- ✅ Large applications with high traffic.
+- ✅ Businesses that need high availability and fault tolerance.
+- ✅ Teams working on different features in parallel.
+
+---
+
+## 🔍 Monolithic vs. Distributed System (Comparison Table)
+
+| Feature                | Monolithic System           | Distributed System        |
+|------------------------|-----------------------------|---------------------------|
+| Architecture           | All-in-one codebase         | Separated into multiple services |
+| Scalability            | Hard to scale               | Easy to scale individual services |
+| Performance            | Faster (no network calls)   | Slightly slower (inter-service communication) |
+| Fault Tolerance        | Low (failure crashes the app) | High (only one service might fail) |
+| Deployment             | Single deployment           | Independent deployments   |
+| Tech Stack             | One stack for all           | Can use different stacks per service |
+| Best for               | Small/medium apps           | Large, high-traffic apps  |
+
+---
